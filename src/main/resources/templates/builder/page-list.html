@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Archweave Builder</title>
+
+    <style>
+        body {
+            max-width: 760px;
+            margin: 64px auto;
+            padding: 0 24px;
+            color: #1f2937;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        .page-list {
+            padding: 0;
+            list-style: none;
+        }
+
+        .page-list li {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+        }
+
+        a {
+            color: #2563eb;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 14px;
+            color: white;
+            background: #2563eb;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Archweave Builder</h1>
+
+    <p>
+        <a class="button" th:href="@{/builder/pages/new}">Create page</a>
+    </p>
+
+    <p th:if="${#lists.isEmpty(pages)}">
+        No pages exist yet.
+    </p>
+
+    <ul class="page-list" th:if="${!#lists.isEmpty(pages)}">
+        <li th:each="page : ${pages}">
+            <span>
+                <strong th:text="${page.title}">Page title</strong>
+                <br>
+                <code th:text="${page.slug}">page-slug</code>
+            </span>
+
+            <span>
+                <a th:href="@{/builder/pages/{slug}(slug=${page.slug})}">
+                    Edit
+                </a>
+                |
+                <a th:href="@{/pages/{slug}(slug=${page.slug})}" target="_blank">
+                    Preview
+                </a>
+            </span>
+        </li>
+    </ul>
+</main>
+</body>
+</html>
