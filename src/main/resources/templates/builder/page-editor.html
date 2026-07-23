@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${page.title + ' · Archweave Builder'}">
+        Page Editor · Archweave Builder
+    </title>
+
+    <style>
+        body {
+            max-width: 860px;
+            margin: 64px auto;
+            padding: 0 24px;
+            color: #1f2937;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 14px;
+            color: white;
+            background: #2563eb;
+            border: 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font: inherit;
+            text-decoration: none;
+        }
+
+        .widget {
+            padding: 20px;
+            margin: 16px 0;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+        }
+
+        textarea {
+            box-sizing: border-box;
+            width: 100%;
+            min-height: 180px;
+            padding: 12px;
+            border: 1px solid #9ca3af;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .error {
+            margin-top: 4px;
+            color: #b91c1c;
+        }
+
+        pre {
+            overflow-x: auto;
+            padding: 12px;
+            background: #f3f4f6;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <p>
+        <a th:href="@{/builder/pages}">← All pages</a>
+    </p>
+
+    <h1 th:text="${page.title}">Page title</h1>
+
+    <div class="toolbar">
+        <a class="button"
+           th:href="@{/pages/{slug}(slug=${page.slug})}"
+           target="_blank">
+            Preview page
+        </a>
+    </div>
+
+    <h2>Current widgets</h2>
+
+    <p th:if="${#lists.isEmpty(page.widgets)}">
+        This page has no widgets yet.
+    </p>
+
+    <article class="widget" th:each="widget : ${page.widgets}">
+        <p>
+            <strong th:text="${widget.type}">HTML</strong>
+            <span th:text="${'(position ' + widget.displayOrder + ')'}">
+                (position 1)
+            </span>
+        </p>
+
+        <div th:utext="${widget.content}"></div>
+
+        <details>
+            <summary>Stored HTML</summary>
+            <pre th:text="${widget.content}"></pre>
+        </details>
+    </article>
+
+    <hr>
+
+    <h2>Add HTML widget</h2>
+
+    <form th:action="@{/builder/pages/{slug}/widgets/html(slug=${page.slug})}"
+          th:object="${createHtmlWidgetRequest}"
+          method="post">
+
+        <label for="html">HTML fragment</label>
+        <textarea id="html"
+                  th:field="*{html}"
+                  placeholder="<h2>My Tasks</h2>&#10;<p>Task list will appear here.</p>"
+                  required></textarea>
+
+        <p class="error"
+           th:if="${#fields.hasErrors('html')}"
+           th:errors="*{html}">
+        </p>
+
+        <button class="button" type="submit">Add widget</button>
+    </form>
+</main>
+</body>
+</html>

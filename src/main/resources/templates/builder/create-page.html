@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Page · Archweave Builder</title>
+
+    <style>
+        body {
+            max-width: 760px;
+            margin: 64px auto;
+            padding: 0 24px;
+            color: #1f2937;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: bold;
+        }
+
+        input {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #9ca3af;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        button {
+            margin-top: 24px;
+            padding: 10px 14px;
+            color: white;
+            background: #2563eb;
+            border: 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .error {
+            margin-top: 4px;
+            color: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <p>
+        <a th:href="@{/builder/pages}">← All pages</a>
+    </p>
+
+    <h1>Create page</h1>
+
+    <form th:action="@{/builder/pages}"
+          th:object="${createPageRequest}"
+          method="post">
+
+        <label for="title">Page title</label>
+        <input id="title"
+               type="text"
+               th:field="*{title}"
+               placeholder="TaskPlanner"
+               required>
+        <p class="error"
+           th:if="${#fields.hasErrors('title')}"
+           th:errors="*{title}">
+        </p>
+
+        <label for="slug">URL slug</label>
+        <input id="slug"
+               type="text"
+               th:field="*{slug}"
+               placeholder="task-planner"
+               required>
+        <p>
+            Your page will be available at:
+            <code>/pages/your-slug</code>
+        </p>
+        <p class="error"
+           th:if="${#fields.hasErrors('slug')}"
+           th:errors="*{slug}">
+        </p>
+
+        <button type="submit">Create page</button>
+    </form>
+</main>
+</body>
+</html>
